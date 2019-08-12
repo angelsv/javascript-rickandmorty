@@ -9,5 +9,10 @@ Aplicación Web responsiva para conectar con el API de Rick And Morty y listar t
 # Instalar dependencias npm
 - npm i
 
-# Vista previa
-- npm start (servidor de desarrollo)
+# Vista previa local
+
+# Activar servidor local
+- npx webpack-dev-server
+
+# Ver en el navegador
+- http://localhost:8080/
