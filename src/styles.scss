@@ -1,0 +1,19 @@
+@import "~bootstrap/scss/bootstrap";
+
+#div-container{
+    .col-sm-3{
+        padding-top: 15px;
+        padding-bottom: 15px;
+    }
+
+    // character
+    div.col-sm-12 .card{
+        margin-top: 15px;   
+        margin-bottom: 15px;   
+    }
+
+    // episodes
+    .card-body button + button{
+        margin: 5px;
+    }
+}
