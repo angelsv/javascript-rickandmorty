@@ -3,10 +3,15 @@ const MiniCssExtractPlugin = require ('mini-css-extract-plugin');
 // var autoprefixer = require('autoprefixer');
 
 module.exports = {
-    entry: './src/app.js',
+    entry: {
+        index: ['./src/js/common','./src/js/index'],
+        character: ['./src/js/common','./src/js/character'],
+        episode: ['./src/js/common','./src/js/episode'],
+    },
+    // entry: './src/app.js',
     output: {
-        path: __dirname + '/build',
-        filename: 'bundle.js'
+        path: __dirname + '/public',
+        filename: '[name].bundle.js'
     },
     devServer: {
         port: 8080
@@ -37,10 +42,31 @@ module.exports = {
     },
     plugins: [
         new HtmlWebpackPlugin({
-            template: './src/index.html'
+            inject: true,
+            title: 'Home',
+            favicon: './src/img/favicon.png',
+            chunks: ['index'],
+            template: './src/templates/index.html',
+            filename: 'index.html'
+        }),
+        new HtmlWebpackPlugin({
+            inject: true,
+            title: 'Character',
+            favicon: './src/img/favicon.png',
+            chunks: ['character'],
+            template: './src/templates/character.html',
+            filename: 'character.html'
+        }),
+        new HtmlWebpackPlugin({
+            inject: true,
+            title: 'Home',
+            favicon: './src/img/favicon.png',
+            chunks: ['episode'],
+            template: './src/templates/episode.html',
+            filename: 'episode.html'
         }),
         new MiniCssExtractPlugin({
-            filename: 'bundle.css'
+            filename: '[name].bundle.css'
         })
     ]
 }

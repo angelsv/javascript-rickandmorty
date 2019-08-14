@@ -1,9 +1,13 @@
+.firebase*
 .tmp
 build/
+public/
 node_modules/
+functions/
 .sass-cache
 .idea
 *.iml
 *.DS_Store
 *.log
 .project
+.package-lock.json
