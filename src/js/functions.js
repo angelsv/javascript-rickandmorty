@@ -1,5 +1,14 @@
 import { create } from "domain";
 
+var loading = document.createElement('div');
+loading.setAttribute('class', 'col-sm-12 text-center');
+var loading_ = document.createElement('div');
+loading_.setAttribute('class', 'fa-3x');
+var icon_loading = document.createElement('i');
+icon_loading.setAttribute('class', 'fas fa-circle-notch fa-spin');
+loading_.appendChild(icon_loading);
+loading.appendChild(loading_);
+
 export function makeCard(character) {
     var divCard = document.createElement("div");
     divCard.classList.add("card");
@@ -48,9 +57,9 @@ export function makeCard(character) {
 
     var cardLink = document.createElement('a');
     cardLink.classList.add('card-link');
-    cardLink.href = 'javascript:;';
+    cardLink.href = 'character.html?id=' + character.id;
     // var linkText = document.createTextNode("my title text");
-    cardLink.addEventListener('click', function () { goToPage('character/' + character.id, false) }, false);
+    // cardLink.addEventListener('click', function () { goToPage('character/' + character.id, false) }, false);
     cardLink.innerHTML = 'Detail: id#' + character.id;
 
     divCardBody_1.appendChild(cardLink);
@@ -61,11 +70,11 @@ export function makeCard(character) {
 
     divCol.appendChild(divCard);
 
-    document.getElementById("div-container").appendChild(divCol);
+    var cont = document.getElementById("div-container");
+    cont.appendChild(divCol);
 }
 
 export function showOne(data){
-    console.log(data);
 
     var divCard = document.createElement('div');
     divCard.setAttribute('class', 'card');
@@ -133,7 +142,9 @@ export function showOne(data){
 
     div12.appendChild(divCard);
 
-    document.getElementById("div-container").appendChild(div12);
+    var cont = document.getElementById("div-container");
+    cont.innerHTML = '';
+    cont.appendChild(div12);
 
     // list episodes
     listEpisodesCharacter(data.episode);
@@ -152,14 +163,10 @@ export function listEpisodesCharacter(episodes){
         var episode_arr = item.split('/');
         var episode = episode_arr[episode_arr.length-1];
 
-        var link = document.createElement('button');
+        var link = document.createElement('a');
         // link.href = 'javascript:;';
         link.setAttribute('class', 'btn btn-info');
-        link.setAttribute('data-data-toggle', 'modal');
-        link.setAttribute('data-target', "#modal");
-        link.setAttribute('type', "button");
-        // link.setAttribute('data-page', episode);
-        link.addEventListener('click', function () { goToPage('episode/' + episode, false) }, false);
+        link.href = 'episode.html?id=' + episode;
         var text = 'Episode ' + episode;
         
         link.innerHTML = text;
@@ -185,12 +192,10 @@ export function pagination(data, page) {
     
     var a = document.createElement('a');
     a.classList.add('page-link');
-    a.href = 'javascript:;';
     a.innerHTML = '<span aria-hidden="true">&laquo;</span>';
     
     if (parseInt(page) > 1) {
-        a.setAttribute('data-page', parseInt(page) - 1);
-        a.addEventListener('click', function () { goToPage('character/?page=' + this.dataset.page, true) }, false);
+        a.href = './?id=' + (parseInt(page) - 1);
     }else{
         liPre.classList.add('disabled');
     }
@@ -198,23 +203,65 @@ export function pagination(data, page) {
     liPre.appendChild(a);
     navigation.appendChild(liPre);
 
+    var limit = 3;
+    var prev, next = false;
     for (var i = 1; i < data.pages + 1; i++) {
+
+        if (
+            i > (page + limit) && page < data.pages && !next
+        ) {
+            var liPre = document.createElement('li');
+            liPre.setAttribute('class', 'page-item disabled');
+
+            var a = document.createElement('a');
+            a.setAttribute('class', 'page-link');
+            a.innerHTML = '<span aria-hidden="true">...</span>';
+
+            liPre.appendChild(a);
+            navigation.appendChild(liPre);
+
+            next = true;
+        }
+
         var li = document.createElement('li');
         li.classList.add('page-item');
 
         var a = document.createElement('a');
         a.classList.add('page-link');
-        a.href = 'javascript:;';
         a.innerHTML = i;
-
+        
         if (page != i) {
-            a.setAttribute('data-page', i);
-            a.addEventListener('click', function () { goToPage('character/?page=' + this.dataset.page, true) }, false);
+            a.href = './?id=' + i;
         } else {
             li.classList.add('active');
         }
         li.appendChild(a);
-        navigation.appendChild(li);
+
+        if( 
+            ( i==1 || i==data.pages ) 
+            || 
+            ( i > (page - limit) && i < (page + limit) ) 
+            ){
+            navigation.appendChild(li);
+        }
+
+
+        if (
+            i < (page - limit) && page > i && !prev
+        ) {
+            var liPre = document.createElement('li');
+            liPre.setAttribute('class', 'page-item disabled');
+
+            var a = document.createElement('a');
+            a.setAttribute('class', 'page-link');
+            a.innerHTML = '<span aria-hidden="true">...</span>';
+
+            liPre.appendChild(a);
+            navigation.appendChild(liPre);
+
+            prev = true;
+        }
+
     }
 
     var liNext = document.createElement('li');
@@ -222,11 +269,9 @@ export function pagination(data, page) {
 
     var a = document.createElement('a');
     a.classList.add('page-link');
-    a.href = 'javascript:;';
     a.innerHTML = '<span aria-hidden="true">&raquo;</span>';
     if (parseInt(page) < parseInt(data.pages)) {
-        a.setAttribute('data-page', parseInt(page) + 1);
-        a.addEventListener('click', function () { goToPage('character/?page=' + this.dataset.page, true) }, false);
+        a.href = './?id=' + (parseInt(page) + 1);
     }else{
         liNext.classList.add('disabled');
     }
@@ -239,11 +284,11 @@ const apiUrl = 'https://rickandmortyapi.com/api/';
 export function goToPage(page, multiple) {
     var cont = document.getElementById("div-container");
     cont.innerHTML = '';
+    cont.appendChild(loading);
 
-    document.getElementById('div-pagination').style.visibility = "hidden";
+    // document.getElementById('div-pagination').style.visibility = "hidden";
 
     var episode = page.split('/') ;
-    console.log(episode[0]);
 
     fetch(apiUrl + page)
         .then(function (response) {
@@ -253,9 +298,10 @@ export function goToPage(page, multiple) {
 
             // if multiple
             if (multiple) {
-                document.getElementById('div-pagination').style.visibility = "visible";
+                // document.getElementById('div-pagination').style.visibility = "visible";
                 var url_next = new URL(apiUrl + page);
                 var next = parseInt(url_next.searchParams.get("page"));
+                cont.innerHTML = '';
                 pagination(myJson.info, next);
                 myJson.results.forEach(function (element) {
                     makeCard(element);
@@ -270,12 +316,13 @@ export function goToPage(page, multiple) {
 }
 
 export function showEpisode(data){
+
     var card = document.createElement('div');
     card.setAttribute('class', 'card border-dark mb-3');
 
     var header = document.createElement('div');
     header.setAttribute('class', 'card-header');
-    header.innerHTML = 'Episode name: ' + data.name;
+    header.innerHTML = 'Episode code: ' + data.episode;
 
     card.appendChild(header);
 
@@ -284,7 +331,7 @@ export function showEpisode(data){
 
     var h5 = document.createElement('h5');
     h5.setAttribute('class', 'card-title');
-    h5.innerHTML = 'Episode Code: ' + data.episode;
+    h5.innerHTML = 'Episode Name: ' + data.name;
 
     body.appendChild(h5);
 

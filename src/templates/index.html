@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title><%= htmlWebpackPlugin.options.title %></title>
+</head>
+<body>
+    
+    <%= require('html-loader!./common.header-menu.html') %>
+
+    <div class="container-fluid">
+
+        <div id="div-container" class="row"></div>
+
+        <div id="div-pagination">
+
+            <nav aria-label="Page navigation">
+                <ul id="navigation" class="pagination"></ul>
+            </nav>
+
+            <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
+                <div id="page-group-prev" class="btn-group mr-2" role="group" aria-label="Prev Pages"></div>
+                <div id="page-group-all" class="btn-group mr-2" role="group" aria-label="All Pages"></div>
+                <div id="page-group-next" class="btn-group" role="group" aria-label="Next Pages"></div>
+            </div>
+        </div>
+
+    </div>
+
+</body>
+</html>
