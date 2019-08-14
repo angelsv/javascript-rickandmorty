@@ -18,4 +18,4 @@ Aplicación Web responsiva para conectar con el API de Rick And Morty y listar t
 - http://localhost:5000
 
 # Ver Online en Firebase
-- https://rick-morty-c3b96.firebaseapp.com/?id=4
+- https://rick-morty-c3b96.firebaseapp.com
