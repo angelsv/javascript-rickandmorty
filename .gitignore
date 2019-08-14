@@ -1,5 +1,7 @@
+.firebase*
 .tmp
 build/
+public/
 node_modules/
 .sass-cache
 .idea
