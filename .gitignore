@@ -3,6 +3,7 @@
 build/
 public/
 node_modules/
+functions/
 .sass-cache
 .idea
 *.iml
